@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - SNOW IOGIN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .space {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(65, 105, 225, 0.5);
+            width: 400px;
+            max-width: 90%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: glow 8s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 30px rgba(65, 105, 225, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.6); }
+            100% { box-shadow: 0 0 30px rgba(0, 191, 255, 0.5); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4169E1;
+            background: rgba(65, 105, 225, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #4169E1, #8A2BE2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #8A2BE2, #4169E1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 105, 225, 0.4);
+        }
+
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .links a {
+            color: #4169E1;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .links a:hover {
+            color: #8A2BE2;
+            text-decoration: underline;
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: shoot linear;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(1000px) translateY(-300px);
+                opacity: 0;
+            }
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: float infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="space" id="space"></div>
+    
+    <div class="login-container">
+        <h1>SNOW LOGIN</h1>
+        <form>
+            <div class="input-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+            </div>
+            <div class="input-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+            </div>
+            <button type="submit">تسجيل الدخول</button>
+            <div class="links">
+                <a href="#">نسيت كلمة المرور؟</a>
+                <a href="#">إنشاء حساب جديد</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+      
+        const space = document.getElementById('space');
+        const spaceWidth = window.innerWidth;
+        const spaceHeight = window.innerHeight;
+
+      
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = `${Math.random() * 3}px`;
+            star.style.height = star.style.width;
+            star.style.left = `${Math.random() * spaceWidth}px`;
+            star.style.top = `${Math.random() * spaceHeight}px`;
+            star.style.opacity = Math.random();
+            star.style.setProperty('--duration', `${5 + Math.random() * 10}s`);
+            space.appendChild(star);
+        }
+
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.left = `${Math.random() * spaceWidth}px`;
+            shootingStar.style.top = `${Math.random() * spaceHeight}px`;
+            shootingStar.style.width = `${2 + Math.random() * 3}px`;
+            shootingStar.style.height = shootingStar.style.width;
+            shootingStar.style.animationDuration = `${2 + Math.random() * 3}s`;
+            space.appendChild(shootingStar);
+
+          
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 3000);
+        }
+
+       
+        function createPlanet() {
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            const size = 50 + Math.random() * 100;
+            planet.style.width = `${size}px`;
+            planet.style.height = `${size}px`;
+            planet.style.left = `${-size + Math.random() * (spaceWidth + size)}px`;
+            planet.style.top = `${-size + Math.random() * (spaceHeight + size)}px`;
+            planet.style.background = `radial-gradient(circle at ${size/3}px ${size/3}px, 
+                hsl(${Math.random() * 360}, 70%, 60%), 
+                hsl(${Math.random() * 360}, 70%, 30%))`;
+            planet.style.animationDuration = `${10 + Math.random() * 20}s`;
+            planet.style.boxShadow = `0 0 ${size/2}px rgba(255, 255, 255, 0.3)`;
+            space.appendChild(planet);
+        }
+
+       
+        for (let i = 0; i < 3; i++) {
+            createPlanet();
+        }
+
+        
+        setInterval(createShootingStar, 2000);
+
+       
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.querySelector('.login-container');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            glow.style.transform = `perspective(1000px) rotateX(${(y - 0.5) * 5}deg) rotateY(${(x - 0.5) * -5}deg)`;
+        });
+    </script>
+</body>
+</html>
