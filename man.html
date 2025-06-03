@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الأساطير - تسجيل الدخول</title>
+    <style>
+        /* أساسيات التصميم الأسطوري */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #0f0c29;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .mythical-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        .particles, .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 400px;
+            margin: 5% auto;
+            padding: 2rem;
+            background: rgba(15, 12, 41, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(106, 90, 205, 0.5);
+            border: 1px solid #6a5acd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mythical-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff);
+            z-index: -1;
+            border-radius: 16px;
+            animation: borderGlow 4s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { filter: blur(5px); opacity: 0.7; }
+            50% { filter: blur(7px); opacity: 1; }
+            100% { filter: blur(5px); opacity: 0.7; }
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .mythical-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #b19cd9;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #6a5acd;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #9370db;
+            box-shadow: 0 0 10px rgba(147, 112, 219, 0.5);
+        }
+
+        .mythical-button {
+            position: relative;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #6a5acd, #9370db);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .mythical-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(106, 90, 205, 0.3);
+        }
+
+        .mythical-button:active {
+            transform: translateY(0);
+        }
+
+        .button-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .mythical-button:hover .button-effects {
+            opacity: 0.3;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .mythical-link {
+            color: #b19cd9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .mythical-link:hover {
+            color: #9370db;
+            text-decoration: underline;
+        }
+
+        /* تأثيرات الجسيمات */
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* النجوم المتلألئة */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="mythical-background">
+        <div class="particles" id="particles"></div>
+        <div class="stars" id="stars"></div>
+    </div>
+    
+    <div class="login-container mythical-card">
+        <div class="logo-container">
+            <!-- شعار بديل باستخدام SVG -->
+            <svg class="animated-logo" width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 70 L25 90 L35 60 L10 40 L40 40 Z" fill="#FFD700"/>
+                <circle cx="50" cy="50" r="30" fill="#6A5ACD" opacity="0.7"/>
+                <path d="M50 30 Q60 50 50 70 Q40 50 50 30" fill="#9370DB"/>
+            </svg>
+            <h1>بوابة الأساطير</h1>
+        </div>
+        
+        <form id="loginForm" class="mythical-form">
+            <div class="form-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="أدخل اسمك الأسطوري" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" placeholder="كلمة المرور السرية" required>
+            </div>
+            
+            <button type="submit" class="mythical-button">
+                <span>الدخول إلى العالم الأسطوري</span>
+                <div class="button-effects"></div>
+            </button>
+            
+            <div class="form-footer">
+                <a href="#" class="mythical-link">نسيت كلمة المرور؟</a>
+                <a href="#" class="mythical-link">إنشاء حساب جديد</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // إنشاء النجوم المتلألئة
+            createStars();
+            
+            // إنشاء الجسيمات المتحركة
+            createParticles();
+            
+            // إدارة نموذج تسجيل الدخول
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // هنا يمكنك إضافة التحقق من صحة البيانات وإرسالها
+                    console.log('تم إرسال البيانات:', { username, password });
+                    
+                    // عرض رسالة نجاح
+                    showMythicalMessage(`مرحباً ${username}! جاهز لدخول العالم الأسطوري؟`);
+                });
+            }
+        });
+
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // تحديد عشوائي للحجم والموضع والمدة
+                const size = Math.random() * 3;
+                const duration = 2 + Math.random() * 3;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${duration}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // تحديد عشوائي للحجم والموضع واللون
+                const size = 2 + Math.random() * 3;
+                const colors = ['#6A5ACD', '#9370DB', '#FFD700', '#40E0D0'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // تحريك الجسيمات
+                animateParticle(particle);
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function animateParticle(particle) {
+            let x = Math.random() * 100;
+            let y = Math.random() * 100;
+            let angle = Math.random() * Math.PI * 2;
+            let speed = 0.02 + Math.random() * 0.03;
+            
+            function move() {
+                x += Math.cos(angle) * speed;
+                y += Math.sin(angle) * speed;
+                
+                // إذا خرج الجسيم من الشاشة، أعده إلى الداخل
+                if (x < 0 || x > 100 || y < 0 || y > 100) {
+                    x = Math.random() * 100;
+                    y = Math.random() * 100;
+                    angle = Math.random() * Math.PI * 2;
+                }
+                
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                
+                requestAnimationFrame(move);
+            }
+            
+            move();
+        }
+
+        function showMythicalMessage(message) {
+            // إنشاء عنصر الرسالة
+            const messageElement = document.createElement('div');
+            messageElement.style.position = 'fixed';
+            messageElement.style.top = '20px';
+            messageElement.style.left = '50%';
+            messageElement.style.transform = 'translateX(-50%)';
+            messageElement.style.backgroundColor = 'rgba(106, 90, 205, 0.9)';
+            messageElement.style.color = 'white';
+            messageElement.style.padding = '15px 30px';
+            messageElement.style.borderRadius = '8px';
+            messageElement.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+            messageElement.style.zIndex = '1000';
+            messageElement.style.animation = 'fadeIn 0.5s';
+            messageElement.textContent = message;
+            
+            document.body.appendChild(messageElement);
+            
+            // إخفاء الرسالة بعد 3 ثواني
+            setTimeout(() => {
+                messageElement.style.animation = 'fadeOut 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(messageElement);
+                }, 500);
+            }, 3000);
+            
+            // تعريف تأثيرات الرسالة
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
