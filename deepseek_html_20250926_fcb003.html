@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل دخول - فضاء وسينما</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a2a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* النجوم في الخلفية */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* الكواكب */
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .planet-1 {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            right: 5%;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c44569);
+            box-shadow: 0 0 50px #ff6b6b;
+        }
+
+        .planet-2 {
+            width: 100px;
+            height: 100px;
+            bottom: 15%;
+            left: 10%;
+            background: radial-gradient(circle at 30% 30%, #4ecdc4, #1a535c);
+            box-shadow: 0 0 40px #4ecdc4;
+        }
+
+        /* حاوية التسجيل */
+        .login-container {
+            background: rgba(10, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 0 30px rgba(100, 100, 255, 0.3);
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* تأثير السينما */
+        .film-strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 10px,
+                #fff 10px,
+                #fff 20px
+            );
+            opacity: 0.1;
+        }
+
+        .film-strip-bottom {
+            top: auto;
+            bottom: 0;
+        }
+
+        /* العنوان */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .login-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45aaf2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
+        }
+
+        .login-header p {
+            color: #a0a0d0;
+            font-size: 1rem;
+        }
+
+        /* حقل الإدخال */
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0d0;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(20, 25, 50, 0.7);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+
+        /* زر التسجيل */
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #ff6b6b, #c44569);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(90deg, #ff5252, #b33939);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* الروابط */
+        .login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .login-links a {
+            color: #4ecdc4;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .login-links a:hover {
+            color: #ff6b6b;
+            text-decoration: underline;
+        }
+
+        /* تأثيرات إضافية */
+        .glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 100, 255, 0.2), transparent 70%);
+            z-index: -1;
+        }
+
+        .glow-1 {
+            top: -100px;
+            right: -100px;
+        }
+
+        .glow-2 {
+            bottom: -100px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.2), transparent 70%);
+        }
+
+        /* شريط السينما المتحرك */
+        .moving-strip {
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            width: 50px;
+            height: 5px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 5px,
+                #ff6b6b 5px,
+                #ff6b6b 10px
+            );
+            animation: moveStrip 10s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes moveStrip {
+            0% { left: -100px; }
+            100% { left: 100%; }
+        }
+
+        /* استجابة للشاشات الصغيرة */
+        @media (max-width: 500px) {
+            .login-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .planet-1, .planet-2 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- النجوم في الخلفية -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- الكواكب -->
+    <div class="planet planet-1"></div>
+    <div class="planet planet-2"></div>
+    
+    <!-- تأثيرات الإضاءة -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    
+    <!-- شريط السينما المتحرك -->
+    <div class="moving-strip"></div>
+    
+    <!-- نموذج التسجيل -->
+    <div class="login-container">
+        <!-- شريط الفيلم العلوي والسفلي -->
+        <div class="film-strip"></div>
+        <div class="film-strip film-strip-bottom"></div>
+        
+        <div class="login-header">
+            <h1>رحلة فضائية</h1>
+            <p>أدخل بياناتك للدخول إلى عالمنا</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+            </div>
+            
+            <button type="submit" class="login-btn">دخول</button>
+            
+            <div class="login-links">
+                <a href="#">نسيت كلمة المرور؟</a>
+                <a href="#">إنشاء حساب جديد</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // إنشاء النجوم العشوائية
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // مواضع وأحجام عشوائية
+                const size = Math.random() * 3;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // معالجة نموذج التسجيل
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // هنا يمكنك إضافة منطق التحقق من صحة البيانات
+            if(username && password) {
+                // تأثير بسيط عند النقر
+                const btn = document.querySelector('.login-btn');
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                    alert(`مرحباً ${username}! تم تسجيل الدخول بنجاح.`);
+                }, 200);
+            }
+        });
+        
+        // إنشاء النجوم عند تحميل الصفحة
+        window.addEventListener('load', createStars);
+    </script>
+</body>
+</html>
