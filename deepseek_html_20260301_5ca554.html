@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الفضاء ثلاثي الأبعاد | رحلة مستقبلية</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Tajawal', 'Arial', sans-serif;
+        }
+        
+        #info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            max-width: 300px;
+            pointer-events: none;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            animation: glow 3s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            to { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6); }
+        }
+        
+        #info-panel h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        
+        #info-panel p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        
+        #controls span {
+            color: #00ffff;
+            font-weight: bold;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 50px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 50px #00ffff;
+            z-index: 1000;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        #stars-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            font-size: 14px;
+            direction: ltr;
+        }
+        
+        .planet-tag {
+            position: absolute;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(3px);
+            white-space: nowrap;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .planet-tag::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, #00ffff, transparent);
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">جاري تحميل الكون 🌌</div>
+    
+    <div id="info-panel">
+        <h1>🌠 استكشاف الفضاء ثلاثي الأبعاد</h1>
+        <p>مرحباً بك في رحلة مستقبلية عبر الكون. استمتع بمشاهدة الكواكب والنجوم بتقنية ثلاثية الأبعاد.</p>
+        <p>🪐 <span style="color: #00ffff;">8 كواكب</span> في المجموعة الشمسية</p>
+        <p>⭐ <span style="color: #ffff00;">آلاف النجوم</span> في الخلفية</p>
+        <p>🚀 تجربة فضائية تفاعلية</p>
+    </div>
+    
+    <div id="controls">
+        <div>🖱️ <span>تحريك</span> - السحب بالماوس</div>
+        <div>🔍 <span>تكبير/تصغير</span> - عجلة الفأرة</div>
+        <div>✨ <span>نجوم متلألئة</span> - تأثيرات ضوئية</div>
+    </div>
+    
+    <div id="stars-count">✨ عدد النجوم: <span id="star-counter">0</span></div>
+
+    <!-- Import Three.js and OrbitControls -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        
+        // إعداد المشهد
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050510);
+        
+        // إعداد الكاميرا
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 25);
+        
+        // إعداد الرندر
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+        
+        // إضافة تأثيرات التوهج
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.1;
+        bloomPass.strength = 1.2;
+        bloomPass.radius = 0.5;
+        
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // إضافة التحكم بالكاميرا
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+        controls.enableZoom = true;
+        controls.maxDistance = 50;
+        controls.minDistance = 5;
+        controls.enablePan = true;
+        
+        // إضافة الإضاءة
+        // إضاءة محيطية خافتة
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+        
+        // إضاءة نقطية في المركز (الشمس)
+        const sunLight = new THREE.PointLight(0xffaa88, 2, 50);
+        sunLight.position.set(0, 0, 0);
+        scene.add(sunLight);
+        
+        // إضاءة إضافية للكواكب
+        const lights = [];
+        for (let i = 0; i < 4; i++) {
+            const light = new THREE.PointLight(0x4466ff, 0.5, 30);
+            light.position.set(Math.sin(i * Math.PI/2) * 15, 5, Math.cos(i * Math.PI/2) * 15);
+            scene.add(light);
+            lights.push(light);
+        }
+        
+        // إضافة النجوم البعيدة (كخلفية)
+        function createBackgroundStars() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 3000;
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                // توزيع عشوائي في كرة كبيرة
+                const r = 80 + Math.random() * 40;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+                
+                positions[i*3] = x;
+                positions[i*3+1] = y;
+                positions[i*3+2] = z;
+                
+                // ألوان عشوائية للنجوم
+                const colorVal = 0.5 + Math.random() * 0.5;
+                colors[i*3] = colorVal * (Math.random() > 0.7 ? 0.8 : 1.0);
+                colors[i*3+1] = colorVal * (Math.random() > 0.7 ? 0.9 : 1.0);
+                colors[i*3+2] = 1.0;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({ 
+                size: 0.4, 
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const stars = new THREE.Points(geometry, material);
+            scene.add(stars);
+            return stars;
+        }
+        
+        // إضافة النجوم القريبة المتلألئة
+        function createTwinklingStars() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 1500;
+            const positions = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            
+            for (let i = 0; i < count; i++) {
+                // توزيع في كرة متوسطة
+                const r = 30 + Math.random() * 30;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+                
+                positions[i*3] = x;
+                positions[i*3+1] = y;
+                positions[i*3+2] = z;
+                
+                sizes[i] = Math.random() * 0.5 + 0.2;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const material = new THREE.PointsMaterial({ 
+                size: 0.3,
+                color: 0xffffff,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                map: createStarTexture()
+            });
+            
+            const stars = new THREE.Points(geometry, material);
+            
+            // إضافة خاصية التلألؤ
+            stars.userData = {
+                originalSizes: sizes.slice(),
+                speed: Array(count).fill().map(() => 0.5 + Math.random() * 2)
+            };
+            
+            scene.add(stars);
+            
+            // تحديث عداد النجوم
+            document.getElementById('star-counter').textContent = count + 3000;
+            
+            return stars;
+        }
+        
+        // إنشاء نسيج النجمة
+        function createStarTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, 32, 32);
+            
+            // رسم نجمة مع توهج
+            const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.4, 'rgba(255, 255, 200, 0.8)');
+            gradient.addColorStop(0.6, 'rgba(200, 200, 255, 0.4)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 32, 32);
+            
+            return new THREE.CanvasTexture(canvas);
+        }
+        
+        // إنشاء الكواكب
+        function createPlanets() {
+            const planets = [];
+            const planetData = [
+                { name: 'عطارد', color: 0xaaaaaa, size: 0.4, distance: 3, speed: 0.02, atmosphere: 0x888888 },
+                { name: 'الزهرة', color: 0xffcc88, size: 0.6, distance: 4.5, speed: 0.015, atmosphere: 0xffaa66 },
+                { name: 'الأرض', color: 0x2288ff, size: 0.65, distance: 6, speed: 0.01, atmosphere: 0x44aaff },
+                { name: 'المريخ', color: 0xff6633, size: 0.55, distance: 7.5, speed: 0.008, atmosphere: 0xff8844 },
+                { name: 'المشتري', color: 0xffaa66, size: 1.2, distance: 9.5, speed: 0.005, atmosphere: 0xffbb88 },
+                { name: 'زحل', color: 0xeeddbb, size: 1.0, distance: 11.5, speed: 0.004, atmosphere: 0xffdd99, hasRing: true },
+                { name: 'أورانوس', color: 0x66ccff, size: 0.9, distance: 13.5, speed: 0.003, atmosphere: 0x88ddff },
+                { name: 'نبتون', color: 0x3366ff, size: 0.9, distance: 15.5, speed: 0.002, atmosphere: 0x5588ff }
+            ];
+            
+            // إنشاء حلقات لكل كوكب (مسارات)
+            planetData.forEach(data => {
+                const ringGeometry = new THREE.TorusGeometry(data.distance, 0.05, 16, 100);
+                const ringMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0x446688, 
+                    transparent: true, 
+                    opacity: 0.15,
+                    side: THREE.DoubleSide
+                });
+                const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+                ring.rotation.x = Math.PI / 2;
+                scene.add(ring);
+            });
+            
+            // إنشاء الكواكب
+            planetData.forEach((data, index) => {
+                // إنشاء مجموعة للكوكب
+                const planetGroup = new THREE.Group();
+                
+                // الكوكب نفسه
+                const geometry = new THREE.SphereGeometry(data.size, 64, 64);
+                const material = new THREE.MeshStandardMaterial({
+                    color: data.color,
+                    emissive: 0x111111,
+                    roughness: 0.4,
+                    metalness: 0.1,
+                    emissiveIntensity: 0.1
+                });
+                
+                const planet = new THREE.Mesh(geometry, material);
+                planet.castShadow = false;
+                planet.receiveShadow = false;
+                planetGroup.add(planet);
+                
+                // إضافة تفاصيل سطح الكوكب (بقع عشوائية)
+                if (data.name === 'المشتري' || data.name === 'زحل') {
+                    const detailGeo = new THREE.SphereGeometry(data.size * 1.01, 64, 64);
+                    const detailMat = new THREE.MeshStandardMaterial({
+                        color: data.color,
+                        emissive: 0x331100,
+                        transparent: true,
+                        opacity: 0.3,
+                        wireframe: true
+                    });
+                    const detailMesh = new THREE.Mesh(detailGeo, detailMat);
+                    planetGroup.add(detailMesh);
+                }
+                
+                // إضافة غلاف جوي
+                const atmosphereGeo = new THREE.SphereGeometry(data.size * 1.05, 64, 64);
+                const atmosphereMat = new THREE.MeshPhongMaterial({
+                    color: data.atmosphere,
+                    transparent: true,
+                    opacity: 0.15,
+                    side: THREE.BackSide,
+                    emissive: data.atmosphere,
+                    emissiveIntensity: 0.3
+                });
+                const atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+                planetGroup.add(atmosphere);
+                
+                // إضافة حلقات لزحل
+                if (data.hasRing) {
+                    const ringGeo = new THREE.TorusGeometry(data.size * 1.8, 0.1, 16, 100);
+                    const ringMat = new THREE.MeshStandardMaterial({
+                        color: 0xccaa88,
+                        emissive: 0x221100,
+                        transparent: true,
+                        opacity: 0.6,
+                        side: THREE.DoubleSide
+                    });
+                    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+                    ringMesh.rotation.x = Math.PI / 3;
+                    ringMesh.rotation.z = 0.2;
+                    planetGroup.add(ringMesh);
+                    
+                    // حلقة ثانية أصغر
+                    const ringGeo2 = new THREE.TorusGeometry(data.size * 1.5, 0.08, 16, 100);
+                    const ringMat2 = new THREE.MeshStandardMaterial({
+                        color: 0x886644,
+                        emissive: 0x221100,
+                        transparent: true,
+                        opacity: 0.4,
+                        side: THREE.DoubleSide
+                    });
+                    const ringMesh2 = new THREE.Mesh(ringGeo2, ringMat2);
+                    ringMesh2.rotation.x = Math.PI / 2.8;
+                    ringMesh2.rotation.z = -0.1;
+                    planetGroup.add(ringMesh2);
+                }
+                
+                // إضافة قمر صغير لبعض الكواكب
+                if (index === 2 || index === 3) { // الأرض والمريخ
+                    const moonGeo = new THREE.SphereGeometry(0.1, 16, 16);
+                    const moonMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, emissive: 0x111111 });
+                    const moon = new THREE.Mesh(moonGeo, moonMat);
+                    moon.position.set(0.8, 0.3, 0.5);
+                    planetGroup.add(moon);
+                }
+                
+                // حفظ بيانات الكوكب
+                planetGroup.userData = {
+                    name: data.name,
+                    distance: data.distance,
+                    speed: data.speed,
+                    angle: Math.random() * Math.PI * 2,
+                    color: data.color
+                };
+                
+                scene.add(planetGroup);
+                planets.push(planetGroup);
+            });
+            
+            return planets;
+        }
+        
+        // إنشاء الشمس
+        function createSun() {
+            const geometry = new THREE.SphereGeometry(2.5, 128, 128);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xffaa33,
+                emissive: 0xff5500,
+                emissiveIntensity: 2.0,
+                roughness: 0.2
+            });
+            
+            const sun = new THREE.Mesh(geometry, material);
+            scene.add(sun);
+            
+            // إضافة توهج للشمس
+            const glowGeo = new THREE.SphereGeometry(2.8, 64, 64);
+            const glowMat = new THREE.MeshBasicMaterial({
+                color: 0xffaa33,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.BackSide
+            });
+            const glow = new THREE.Mesh(glowGeo, glowMat);
+            scene.add(glow);
+            
+            // إضافة جسيمات حول الشمس
+            const particleCount = 200;
+            const particleGeo = new THREE.BufferGeometry();
+            const particlePositions = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (i / particleCount) * Math.PI * 2;
+                const radius = 3.2 + Math.random() * 1.5;
+                const x = Math.cos(angle) * radius;
+                const z = Math.sin(angle) * radius;
+                const y = (Math.random() - 0.5) * 2;
+                
+                particlePositions[i*3] = x;
+                particlePositions[i*3+1] = y;
+                particlePositions[i*3+2] = z;
+            }
+            
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+            const particleMat = new THREE.PointsMaterial({ 
+                color: 0xffaa33, 
+                size: 0.1,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+            const particles = new THREE.Points(particleGeo, particleMat);
+            scene.add(particles);
+            
+            return { sun, glow, particles };
+        }
+        
+        // إنشاء سديم (Nebula) كخلفية
+        function createNebula() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 500;
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                const r = 40 + Math.random() * 40;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta) * 0.5; // تسطيح في المحور Y
+                const z = r * Math.cos(phi);
+                
+                positions[i*3] = x;
+                positions[i*3+1] = y;
+                positions[i*3+2] = z;
+                
+                // ألوان السديم (بنفسجي - أزرق - وردي)
+                const colorChoice = Math.random();
+                if (colorChoice < 0.33) {
+                    colors[i*3] = 0.6; colors[i*3+1] = 0.3; colors[i*3+2] = 0.8; // بنفسجي
+                } else if (colorChoice < 0.66) {
+                    colors[i*3] = 0.3; colors[i*3+1] = 0.5; colors[i*3+2] = 0.9; // أزرق
+                } else {
+                    colors[i*3] = 0.9; colors[i*3+1] = 0.4; colors[i*3+2] = 0.6; // وردي
+                }
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({ 
+                size: 1.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true
+            });
+            
+            const nebula = new THREE.Points(geometry, material);
+            scene.add(nebula);
+            
+            return nebula;
+        }
+        
+        // إنشاء جسيمات غبار كوني
+        function createSpaceDust() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 800;
+            const positions = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                const r = 20 + Math.random() * 30;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                
+                positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i*3+2] = r * Math.cos(phi);
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({ 
+                color: 0x88aaff,
+                size: 0.1,
+                transparent: true,
+                opacity: 0.1,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const dust = new THREE.Points(geometry, material);
+            scene.add(dust);
+            
+            return dust;
+        }
+        
+        // إنشاء كل العناصر
+        console.log("جاري إنشاء الكون ثلاثي الأبعاد...");
+        
+        const backgroundStars = createBackgroundStars();
+        const twinklingStars = createTwinklingStars();
+        const sunElements = createSun();
+        const planets = createPlanets();
+        const nebula = createNebula();
+        const dust = createSpaceDust();
+        
+        // إخفاء شاشة التحميل
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+        }, 2000);
+        
+        // متغيرات للحركة
+        let clock = new THREE.Clock();
+        
+        // دالة التحديث (الأنيميشن)
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const elapsedTime = performance.now() / 1000;
+            
+            // تدوير الكواكب حول الشمس
+            planets.forEach(planet => {
+                planet.userData.angle += planet.userData.speed * delta * 20;
+                
+                const distance = planet.userData.distance;
+                const angle = planet.userData.angle;
+                
+                planet.position.x = Math.cos(angle) * distance;
+                planet.position.z = Math.sin(angle) * distance;
+                planet.position.y = Math.sin(angle * 2) * 0.5; // حركة عمودية بسيطة
+                
+                // تدوير الكوكب حول نفسه
+                planet.rotation.y += 0.01;
+            });
+            
+            // تدوير النجوم المتلألئة (تأثير التلألؤ)
+            if (twinklingStars.material) {
+                // تغيير حجم النجوم للتلألؤ
+                // يمكن إضافة تأثير هنا لكنه مكلف أدائياً
+            }
+            
+            // تدوير الشمس
+            if (sunElements.sun) {
+                sunElements.sun.rotation.y += 0.001;
+                sunElements.glow.rotation.y += 0.0005;
+                sunElements.particles.rotation.y += 0.002;
+            }
+            
+            // تدوير السديم ببطء
+            if (nebula) {
+                nebula.rotation.y += 0.0002;
+            }
+            
+            // تدوير الغبار الكوني
+            if (dust) {
+                dust.rotation.y += 0.0005;
+            }
+            
+            // تحديث عناصر التحكم
+            controls.update();
+            
+            // عرض المشهد مع التأثيرات
+            composer.render();
+        }
+        
+        animate();
+        
+        // معالجة تغيير حجم النافذة
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // إضافة تسميات الكواكب (اختياري - يمكن إضافتها كعناصر HTML)
+        function createPlanetLabels() {
+            // هذه الوظيفة يمكن تفعيلها لإضافة تسميات نصية
+            // لكنها معقدة بعض الشيء في التنسيق
+        }
+        
+        console.log("تم إنشاء الكون بنجاح!");
+    </script>
+</body>
+</html>
